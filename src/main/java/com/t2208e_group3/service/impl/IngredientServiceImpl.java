@@ -19,10 +19,11 @@ public class IngredientServiceImpl implements IngredientService {
     private IngredientItemRepository ingredientItemRepository;
     @Autowired
     private IngredientCategoryRepository ingredientCategoryRepository;
+    @Autowired
     private RestaurantService restaurantService;
 
     @Override
-    public IngredientCategory createIngredientCategory(String name, long restaurantId) throws Exception {
+    public IngredientCategory createIngredientCategory(String name, Long restaurantId) throws Exception {
         Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
         IngredientCategory category = new IngredientCategory();
         category.setRestaurant(restaurant);
