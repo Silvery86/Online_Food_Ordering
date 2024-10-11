@@ -36,8 +36,8 @@ public class OrderServiceImpl implements OrderService {
     private CartService cartService;
     @Override
     public Order createOrder(OrderRequest order, User user) throws Exception {
-        Address shippAdress = order.getDiliveryAddress();
-        Address savedAddress = addressRepository.save(shippAdress);
+        Address shipAddress = order.getDeliveryAddress();
+        Address savedAddress = addressRepository.save(shipAddress);
         if(!user.getAddresses().contains(savedAddress)){
             user.getAddresses().add(savedAddress);
             userRepository.save(user);

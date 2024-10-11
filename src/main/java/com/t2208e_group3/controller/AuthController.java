@@ -75,12 +75,10 @@ public class AuthController {
     public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest req){
         String username = req.getEmail();
         String password = req.getPassword();
-
         Authentication authentication = authenticate(username,password);
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String role = authorities.isEmpty()?null:authorities.iterator().next().getAuthority();
         String jwt = jwtProvider.generateToken(authentication);
-
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(jwt);
         authResponse.setMessage("Login success");
