@@ -25,7 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .setCancelUrl("http://localhost:3000/payment/fail")
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L).setPriceData(SessionCreateParams.LineItem.PriceData.builder()
-                                .setCurrency("usd")
+                                .setCurrency("vnd")
                                 .setUnitAmount((long) order.getTotalPrice()*100)
                                 .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                         .setName("Foodify").build())
