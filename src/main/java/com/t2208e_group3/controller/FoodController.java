@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/food")
+@RequestMapping("/api")
 public class FoodController {
     @Autowired
     private FoodService foodService;
@@ -25,7 +25,7 @@ public class FoodController {
     private RestaurantService restaurantService;
 
 
-    @GetMapping("/search")
+    @GetMapping("/food/search")
     public ResponseEntity<List<Food>> searchFood(@RequestParam String name,
                                                 @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
@@ -34,16 +34,14 @@ public class FoodController {
         return new ResponseEntity<>(foods, HttpStatus.OK);
     }
 
-    @GetMapping("/restaurant/{restaurantId}")
+    @GetMapping("/restaurants/food/{restaurantId}")
     public ResponseEntity<List<Food>> getRestaurantFood(
             @RequestParam (required = false) boolean vegetarian,
             @RequestParam (required = false) boolean seasonal,
             @RequestParam (required = false) boolean nonveg,
             @RequestParam(required = false) String food_category,
-            @PathVariable Long restaurantId,
-            @RequestHeader("Authorization") String jwt) throws Exception{
-
-        User user = userService.findUserByJwtToken(jwt);
+            @PathVariable Long restaurantId
+           ) throws Exception{
         List<Food> foods = foodService.getRestaurantFood(restaurantId,vegetarian,nonveg,seasonal,food_category);
         return new ResponseEntity<>(foods, HttpStatus.OK);
     }
