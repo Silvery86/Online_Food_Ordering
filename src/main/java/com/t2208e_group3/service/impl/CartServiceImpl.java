@@ -29,23 +29,37 @@ public class CartServiceImpl implements CartService {
     public CartItem addItemToCart(AddCartItemRequest req, String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Food food = foodService.findFoodById(req.getFoodId());
+
+        // Check if the food is available
+        if (!food.isAvailable()) {
+            throw new Exception("The selected food is not available.");
+        }
+
         Cart cart = cartRepository.findByCustomerId(user.getId());
-        for(CartItem cartItem : cart.getItems()){
-            if(cartItem.getFood().equals(food)){
-                int newQuantity = cartItem.getQuantity()+req.getQuantity();
+
+        // Check if the food already exists in the cart
+        for (CartItem cartItem : cart.getItems()) {
+            if (cartItem.getFood().equals(food)) {
+                int newQuantity = cartItem.getQuantity() + req.getQuantity();
                 return updateCartItemQuantity(cartItem.getId(), newQuantity);
             }
         }
+
+        // Create a new cart item since it doesn't exist in the cart
         CartItem newCartItem = new CartItem();
         newCartItem.setFood(food);
         newCartItem.setCart(cart);
         newCartItem.setQuantity(req.getQuantity());
         newCartItem.setIngredients(req.getIngredients());
-        newCartItem.setTotalPrice(req.getQuantity()*food.getPrice());
+        newCartItem.setTotalPrice(req.getQuantity() * food.getPrice());
+
         CartItem savedCartItem = cartItemRepository.save(newCartItem);
         cart.getItems().add(savedCartItem);
+
         return savedCartItem;
     }
+
+
 
     @Override
     public CartItem updateCartItemQuantity(Long cartItemId, int quantity) throws Exception {

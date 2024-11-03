@@ -1,6 +1,6 @@
 package com.t2208e_group3.controller;
 
-import com.t2208e_group3.model.Event;
+
 import com.t2208e_group3.response.EventWithDetailResponse;
 import com.t2208e_group3.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
