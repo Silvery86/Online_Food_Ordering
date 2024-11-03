@@ -5,6 +5,7 @@ import com.t2208e_group3.model.Order;
 import com.t2208e_group3.model.User;
 import com.t2208e_group3.request.AddCartItemRequest;
 import com.t2208e_group3.request.OrderRequest;
+import com.t2208e_group3.request.UpdateOrderStatusRequest;
 import com.t2208e_group3.response.PaymentResponse;
 import com.t2208e_group3.service.OrderService;
 import com.t2208e_group3.service.PaymentService;
@@ -27,12 +28,11 @@ public class OrderController {
     private PaymentService paymentService;
 
     @PostMapping("/order")
-    public ResponseEntity<PaymentResponse> createOrder(@RequestBody OrderRequest req,
-                                                       @RequestHeader("Authorization") String jwt) throws Exception{
+    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest req,
+                                             @RequestHeader("Authorization") String jwt) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
         Order order = orderService.createOrder(req,user);
-        PaymentResponse res = paymentService.createPaymentLink(order);
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
     @GetMapping("/order/user")
@@ -41,5 +41,18 @@ public class OrderController {
         User user = userService.findUserByJwtToken(jwt);
         List<Order> orders = orderService.getUserOrder(user.getId());
         return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+    @PutMapping("/order/{orderId}/status")
+    public ResponseEntity<Order> updateOrderStatus(
+            @PathVariable Long orderId,
+            @RequestBody UpdateOrderStatusRequest request
+    ) {
+        try {
+            Order updatedOrder = orderService.updateOrder(orderId, request.getOrderStatus());
+            return ResponseEntity.ok(updatedOrder);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }

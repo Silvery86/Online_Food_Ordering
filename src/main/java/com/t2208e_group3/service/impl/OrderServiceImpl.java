@@ -75,15 +75,28 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order updateOrder(Long orderId, String orderStatus) throws Exception {
         Order order = findOrderById(orderId);
-        if(orderStatus.equals("OUT_FOR_DELIVERY")
+        if (order == null) {
+            throw new Exception("Order not found for ID: " + orderId);
+        }
+
+        System.out.println("Current Order Status: " + order.getOrderStatus());
+
+        if (orderStatus.equals("OUT_FOR_DELIVERY")
+                || orderStatus.equals("FAILED")
+                || orderStatus.equals("PAID")
+                || orderStatus.equals("CANCEL")
                 || orderStatus.equals("DELIVERED")
                 || orderStatus.equals("COMPLETED")
                 || orderStatus.equals("PENDING")
-        ){
+        ) {
             order.setOrderStatus(orderStatus);
-            return orderRepository.save(order);
+            System.out.println("Updating Order Status to: " + orderStatus);
+
+            Order updatedOrder = orderRepository.save(order);
+            System.out.println("Updated Order Status: " + updatedOrder.getOrderStatus());
+            return updatedOrder;
         }
-        throw  new Exception("Please select a valid order status");
+        throw new Exception("Please select a valid order status");
     }
 
     @Override
