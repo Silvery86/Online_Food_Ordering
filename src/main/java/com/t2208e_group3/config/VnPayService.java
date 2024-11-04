@@ -18,8 +18,8 @@ public class VnPayService {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String vnp_TxnRef = vnPayConfig.getRandomNumber(8);
-        String vnp_IpAddr = vnPayConfig.vnp_IpAddress;
-        String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
+        String vnp_IpAddr = vnPayConfig.getVnpIpAddress();
+        String vnp_TmnCode = vnPayConfig.getVnpTmnCode();
         String orderType = "order-type";
 
         Map<String, String> vnp_Params = new HashMap<>();
@@ -36,8 +36,8 @@ public class VnPayService {
         String locate = "vn";
         vnp_Params.put("vnp_Locale", locate);
 
-        urlReturn += vnPayConfig.vnp_Returnurl;
-        vnp_Params.put("vnp_ReturnUrl", vnPayConfig.vnp_Returnurl);
+        urlReturn += vnPayConfig.getVnpReturnUrl();
+        vnp_Params.put("vnp_ReturnUrl", vnPayConfig.getVnpReturnUrl());
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -78,9 +78,9 @@ public class VnPayService {
             }
         }
         String queryUrl = query.toString();
-        String vnp_SecureHash = vnPayConfig.hmacSHA512(vnPayConfig.vnp_HashSecret, hashData.toString());
+        String vnp_SecureHash = vnPayConfig.hmacSHA512(vnPayConfig.getVnpHashSecret(), hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = vnPayConfig.vnp_PayUrl + "?" + queryUrl;
+        String paymentUrl = vnPayConfig.getVnpPayUrl() + "?" + queryUrl;
         return paymentUrl;
     }
 

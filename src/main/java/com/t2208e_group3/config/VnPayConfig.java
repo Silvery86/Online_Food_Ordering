@@ -1,7 +1,10 @@
 package com.t2208e_group3.config;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.context.annotation.Configuration;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -11,35 +14,57 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-@Configuration
+@Component
+@Getter
+@Setter
 public class VnPayConfig {
-    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_Returnurl = getVnpReturnUrl();;
-    public static String vnp_TmnCode = "H93H4X5C";
-    public static String vnp_HashSecret = "SCYVEA2ZP1B9VT96VU4TDMGSOHMPYWI7";
-    public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
-    public static String vnp_Version = "2.1.0";
-    public static String vnp_Command = "pay";
-    public static String vnp_IpAddress = getVnpIpAddress();
+    private String vnpPayUrl;
+    private String vnpReturnUrl;
+    private String vnpTmnCode;
+    private String vnpHashSecret;
+    private String vnpApiUrl;
+    private String vnpVersion;
+    private String vnpCommand;
+    private String vnpIpAddress;
 
-    public static String getVnpReturnUrl() {
-        String hostname = System.getenv("HOSTNAME"); // Or however you retrieve the host for your environment
-
-        if ("foodsou.store".equalsIgnoreCase(hostname)) {
-            return "https://foodsou.store/payment/process";
-        } else {
-            return "http://localhost:3000/payment/process";
-        }
+    @Value("${vnpay.payment_url}")
+    public void setVnpPayUrl(String vnpPayUrl) {
+        this.vnpPayUrl = vnpPayUrl;
     }
 
-    public static String getVnpIpAddress() {
-        String hostname = System.getenv("HOSTNAME"); // Or however you retrieve the host for your environment
+    @Value("${vnpay.return_url}")
+    public void setVnpReturnUrl(String vnpReturnUrl) {
+        this.vnpReturnUrl = vnpReturnUrl;
+    }
 
-        if ("foodsou.store".equalsIgnoreCase(hostname)) {
-            return "188.166.253.241";
-        } else {
-            return "127.0.0.1";
-        }
+    @Value("${vnpay.tmn_code}")
+    public void setVnpTmnCode(String vnpTmnCode) {
+        this.vnpTmnCode = vnpTmnCode;
+    }
+
+    @Value("${vnpay.hash_secret}")
+    public void setVnpHashSecret(String vnpHashSecret) {
+        this.vnpHashSecret = vnpHashSecret;
+    }
+
+    @Value("${vnpay.api_url}")
+    public void setVnpApiUrl(String vnpApiUrl) {
+        this.vnpApiUrl = vnpApiUrl;
+    }
+
+    @Value("${vnpay.version}")
+    public void setVnpVersion(String vnpVersion) {
+        this.vnpVersion = vnpVersion;
+    }
+
+    @Value("${vnpay.command}")
+    public void setVnpCommand(String vnpCommand) {
+        this.vnpCommand = vnpCommand;
+    }
+
+    @Value("${vnpay.ip_address}")
+    public void setVnpIpAddress(String vnpIpAddress) {
+        this.vnpIpAddress = vnpIpAddress;
     }
 
     public static String md5(String message) {
@@ -52,15 +77,13 @@ public class VnPayConfig {
                 sb.append(String.format("%02x", b & 0xff));
             }
             digest = sb.toString();
-        } catch (UnsupportedEncodingException ex) {
-            digest = "";
-        } catch (NoSuchAlgorithmException ex) {
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
             digest = "";
         }
         return digest;
     }
 
-    public static String Sha256(String message) {
+    public String Sha256(String message) {
         String digest = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -70,15 +93,13 @@ public class VnPayConfig {
                 sb.append(String.format("%02x", b & 0xff));
             }
             digest = sb.toString();
-        } catch (UnsupportedEncodingException ex) {
-            digest = "";
-        } catch (NoSuchAlgorithmException ex) {
+        } catch (UnsupportedEncodingException | NoSuchAlgorithmException ex) {
             digest = "";
         }
         return digest;
     }
 
-    public static String hashAllFields(Map fields) {
+    public String hashAllFields(Map fields) {
         List fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);
         StringBuilder sb = new StringBuilder();
@@ -95,10 +116,10 @@ public class VnPayConfig {
                 sb.append("&");
             }
         }
-        return hmacSHA512(vnp_HashSecret,sb.toString());
+        return hmacSHA512(this.vnpHashSecret,sb.toString());
     }
 
-    public static String hmacSHA512(final String key, final String data) {
+    public String hmacSHA512(final String key, final String data) {
         try {
 
             if (key == null || data == null) {
@@ -121,7 +142,7 @@ public class VnPayConfig {
         }
     }
 
-    public static String getIpAddress(HttpServletRequest request) {
+    public String getIpAddress(HttpServletRequest request) {
         String ipAdress;
         try {
             ipAdress = request.getHeader("X-FORWARDED-FOR");
@@ -134,7 +155,7 @@ public class VnPayConfig {
         return ipAdress;
     }
 
-    public static String getRandomNumber(int len) {
+    public String getRandomNumber(int len) {
         Random rnd = new Random();
         String chars = "0123456789";
         StringBuilder sb = new StringBuilder(len);
