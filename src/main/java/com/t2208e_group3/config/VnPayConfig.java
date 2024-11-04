@@ -20,6 +20,7 @@ public class VnPayConfig {
     public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
+    public static String vnp_IpAddress = getVnpIpAddress();
 
     public static String getVnpReturnUrl() {
         String hostname = System.getenv("HOSTNAME"); // Or however you retrieve the host for your environment
@@ -28,6 +29,16 @@ public class VnPayConfig {
             return "https://foodsou.store/payment/process";
         } else {
             return "http://localhost:3000/payment/process";
+        }
+    }
+
+    public static String getVnpIpAddress() {
+        String hostname = System.getenv("HOSTNAME"); // Or however you retrieve the host for your environment
+
+        if ("foodsou.store".equalsIgnoreCase(hostname)) {
+            return "188.166.253.241";
+        } else {
+            return "127.0.0.1";
         }
     }
 
