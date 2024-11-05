@@ -14,7 +14,7 @@ import java.util.List;
 public class CreateEventRequest {
 
     private EventData event; // Use the correct name for the nested object
-    private List<Detail> details;
+    private Detail details;
     private Long restaurantId;
 
     @Data
@@ -35,6 +35,5 @@ public class CreateEventRequest {
         private LocalDateTime startAt;
         private LocalDateTime endAt;
         private String image;
-        private List<String> images;
     }
 }

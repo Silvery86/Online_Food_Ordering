@@ -11,5 +11,5 @@ import java.util.List;
 public interface EventDetailRepository extends JpaRepository<EventDetail, Long> {
     void deleteByEvent(Event event);
 
-    List<EventDetail> findByEventId(Long eventId);
+    EventDetail findByEventId(Long eventId);
 }

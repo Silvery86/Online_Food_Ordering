@@ -35,8 +35,8 @@ public class Event {
     private Restaurant restaurant;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<EventDetail> details = new ArrayList<>();
+    @OneToOne(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private EventDetail details;
 
     // Getters and setters
 }

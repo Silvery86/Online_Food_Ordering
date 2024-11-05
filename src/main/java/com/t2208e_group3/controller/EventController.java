@@ -25,20 +25,16 @@ public class EventController {
     public ResponseEntity<?> createEventWithDetails(
             @RequestBody CreateEventRequest createEventRequest,
             @RequestHeader("Authorization") String jwt) throws Exception {
-
         if (createEventRequest.getEvent() == null) {
             return new ResponseEntity<>("Event data is required", HttpStatus.BAD_REQUEST);
         }
-
         if (createEventRequest.getRestaurantId() == null) {
             return new ResponseEntity<>("Restaurant ID is required", HttpStatus.BAD_REQUEST);
         }
-
         User user = userService.findUserByJwtToken(jwt);
         Event createdEvent = eventService.createEventWithDetails(createEventRequest);
         return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
     }
-
 
     @PutMapping("/{eventId}")
     public ResponseEntity<?> updateEventWithDetails(

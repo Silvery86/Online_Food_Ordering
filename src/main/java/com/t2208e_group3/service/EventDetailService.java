@@ -9,5 +9,5 @@ public interface EventDetailService {
     EventDetail getEventDetailById(Long id);
     EventDetail createEventDetail(EventDetail eventDetail);
     void deleteEventDetail(Long id);
-    List<EventDetail> getEventDetailsByEventId(Long eventId);
+    EventDetail getEventDetailsByEventId(Long eventId);
 }

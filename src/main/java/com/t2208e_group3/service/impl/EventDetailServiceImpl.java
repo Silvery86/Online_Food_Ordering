@@ -35,7 +35,7 @@ public class EventDetailServiceImpl implements EventDetailService {
     }
 
     @Override
-    public List<EventDetail> getEventDetailsByEventId(Long eventId) {
+    public EventDetail getEventDetailsByEventId(Long eventId) {
         return eventDetailRepository.findByEventId(eventId);
     }
 }

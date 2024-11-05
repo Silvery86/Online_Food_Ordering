@@ -16,9 +16,11 @@ public class EventDetail {
 
     private String header;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "event_id")
     private Event event;
 
