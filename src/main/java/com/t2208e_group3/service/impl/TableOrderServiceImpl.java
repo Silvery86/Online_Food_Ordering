@@ -1,5 +1,6 @@
 package com.t2208e_group3.service.impl;
 
+import com.t2208e_group3.model.Order;
 import com.t2208e_group3.request.OrderTableRequest;
 import com.t2208e_group3.response.OrderTableResponse;
 import com.t2208e_group3.model.Restaurant;
@@ -95,6 +96,36 @@ public class TableOrderServiceImpl implements TableOrderService {
         tableOrder.setPhone(orderTableRequest.getPhone());
         tableOrder.setStatus(orderTableRequest.getStatus());
         return mapToResponse(tableOrderRepository.save(tableOrder));
+    }
+
+    @Override
+    public TableOrder findOrderById(Long orderId) throws Exception {
+        Optional<TableOrder> optionalOrder = tableOrderRepository.findById(orderId);
+        if(optionalOrder.isEmpty()){
+            throw new Exception("Order not found");
+        }
+        return optionalOrder.get();
+    }
+
+    @Override
+    public TableOrder updateOrder(Long orderId, Long restaurantId, String orderStatus) throws Exception {
+        TableOrder order = findOrderById(orderId);
+        if (order == null) {
+            throw new Exception("Order not found for ID: " + orderId);
+        }
+        System.out.println("Current Order Status: " + order.getStatus());
+
+        if (orderStatus.equals("CANCELLED")
+                || orderStatus.equals("CONFIRMED")
+        ) {
+            order.setStatus(orderStatus);
+            System.out.println("Updating Order Status to: " + orderStatus);
+
+            TableOrder updatedOrder = tableOrderRepository.save(order);
+            System.out.println("Updated Order Status: " + updatedOrder.getStatus());
+            return updatedOrder;
+        }
+        throw new Exception("Please select a valid order status");
     }
 
     @Override

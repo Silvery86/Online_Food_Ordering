@@ -46,9 +46,11 @@ public class OrderController {
     @PutMapping("/order/{orderId}/status")
     public ResponseEntity<Order> updateOrderStatus(
             @PathVariable Long orderId,
-            @RequestBody UpdateOrderStatusRequest request
-    ) {
+            @RequestBody UpdateOrderStatusRequest request,
+            @RequestHeader("Authorization") String jwt
+    )throws Exception {
         try {
+            User user = userService.findUserByJwtToken(jwt);
             Order updatedOrder = orderService.updateOrder(orderId, request.getOrderStatus());
             return ResponseEntity.ok(updatedOrder);
         } catch (Exception e) {

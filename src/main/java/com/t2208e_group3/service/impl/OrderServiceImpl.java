@@ -78,7 +78,6 @@ public class OrderServiceImpl implements OrderService {
         if (order == null) {
             throw new Exception("Order not found for ID: " + orderId);
         }
-
         System.out.println("Current Order Status: " + order.getOrderStatus());
 
         if (orderStatus.equals("OUT_FOR_DELIVERY")

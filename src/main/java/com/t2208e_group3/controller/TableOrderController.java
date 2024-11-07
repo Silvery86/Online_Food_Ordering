@@ -1,8 +1,13 @@
 package com.t2208e_group3.controller;
 
+import com.t2208e_group3.model.Order;
+import com.t2208e_group3.model.Restaurant;
+import com.t2208e_group3.model.TableOrder;
 import com.t2208e_group3.model.User;
 import com.t2208e_group3.request.OrderTableRequest;
+import com.t2208e_group3.request.UpdateOrderStatusRequest;
 import com.t2208e_group3.response.OrderTableResponse;
+import com.t2208e_group3.service.RestaurantService;
 import com.t2208e_group3.service.TableOrderService;
 import com.t2208e_group3.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,9 @@ public class TableOrderController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RestaurantService restaurantService;
+
     @GetMapping
     public List<OrderTableResponse> getAllTableOrders() {
         return tableOrderService.getAllTableOrders();
@@ -36,7 +44,9 @@ public class TableOrderController {
     }
 
     @PostMapping
-    public OrderTableResponse createTableOrder(@RequestBody OrderTableRequest orderTableRequest) {
+    public OrderTableResponse createTableOrder(@RequestBody OrderTableRequest orderTableRequest,
+                                               @RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
         return tableOrderService.createTableOrder(orderTableRequest);
     }
 
@@ -57,7 +67,6 @@ public class TableOrderController {
     }
 
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ADMIN')")
     public ResponseEntity<List<OrderTableResponse>> getOrderTableByUserId(
             @PathVariable Long userId,
             @RequestHeader("Authorization") String jwt) throws Exception {
@@ -70,7 +79,6 @@ public class TableOrderController {
 
     // Endpoint for fetching orders by Restaurant ID
     @GetMapping("/restaurant/{restaurantId}")
-    @PreAuthorize("hasRole('ROLE_RESTAURANT_OWNER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<OrderTableResponse>> getOrderTableByRestaurantId(
             @PathVariable Long restaurantId,
             @RequestHeader("Authorization") String jwt) throws Exception {
@@ -79,5 +87,8 @@ public class TableOrderController {
         // Fetch and return the order tables for this restaurant
         return ResponseEntity.ok(tableOrderService.getOrderTableByRestaurantId(restaurantId));
     }
+
+
+
 
 }
