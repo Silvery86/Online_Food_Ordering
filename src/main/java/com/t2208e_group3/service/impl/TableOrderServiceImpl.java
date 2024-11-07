@@ -59,8 +59,11 @@ public class TableOrderServiceImpl implements TableOrderService {
 
     @Override
     public OrderTableResponse createTableOrder(OrderTableRequest orderTableRequest) {
-        User user = userRepository.findById(orderTableRequest.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = null;
+        if (orderTableRequest.getUserId() != null) {
+            user = userRepository.findById(orderTableRequest.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+        }
         Restaurant restaurant = restaurantRepository.findById(orderTableRequest.getRestaurantId())
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
@@ -82,8 +85,11 @@ public class TableOrderServiceImpl implements TableOrderService {
     public OrderTableResponse updateTableOrder(Long id, OrderTableRequest orderTableRequest) {
         TableOrder tableOrder = tableOrderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("TableOrder not found with id " + id));
-        User user = userRepository.findById(orderTableRequest.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = null;
+        if (orderTableRequest.getUserId() != null) {
+            user = userRepository.findById(orderTableRequest.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+        }
         Restaurant restaurant = restaurantRepository.findById(orderTableRequest.getRestaurantId())
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
         tableOrder.setUser(user);

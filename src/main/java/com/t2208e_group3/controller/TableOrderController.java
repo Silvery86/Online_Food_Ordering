@@ -44,9 +44,7 @@ public class TableOrderController {
     }
 
     @PostMapping
-    public OrderTableResponse createTableOrder(@RequestBody OrderTableRequest orderTableRequest,
-                                               @RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    public OrderTableResponse createTableOrder(@RequestBody OrderTableRequest orderTableRequest)  {
         return tableOrderService.createTableOrder(orderTableRequest);
     }
 
