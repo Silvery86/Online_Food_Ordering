@@ -66,7 +66,6 @@ public class TableOrderServiceImpl implements TableOrderService {
         }
         Restaurant restaurant = restaurantRepository.findById(orderTableRequest.getRestaurantId())
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
-
         TableOrder tableOrder = new TableOrder();
         tableOrder.setUser(user);
         tableOrder.setRestaurant(restaurant);
