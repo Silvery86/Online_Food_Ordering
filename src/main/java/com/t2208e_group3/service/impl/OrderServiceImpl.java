@@ -34,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
     private RestaurantService restaurantService;
     @Autowired
     private CartService cartService;
+
     @Override
     public Order createOrder(OrderRequest order, User user) throws Exception {
         Address shipAddress = order.getDeliveryAddress();
@@ -49,9 +50,7 @@ public class OrderServiceImpl implements OrderService {
         createdOrder.setOrderStatus("PENDING");
         createdOrder.setDeliveryAddress(savedAddress);
         createdOrder.setRestaurant(restaurant);
-
         Cart cart = cartService.findCartByUserId(user.getId());
-
         List<OrderItem> orderItems = new ArrayList<>();
         for(CartItem cartItem : cart.getItems()){
             OrderItem orderItem = new OrderItem();
@@ -59,11 +58,12 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setIngredients(cartItem.getIngredients());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
-
             OrderItem savedOrderItem = orderItemRepository.save(orderItem);
             orderItems.add(savedOrderItem);
         }
         Long totalPrice = cartService.calculateCartTotal(cart);
+        createdOrder.setShippingName(order.getShippingName());
+        createdOrder.setShippingPhone(order.getShippingPhone());
         createdOrder.setItems(orderItems);
         createdOrder.setTotalPrice(totalPrice);
 
@@ -87,6 +87,7 @@ public class OrderServiceImpl implements OrderService {
                 || orderStatus.equals("DELIVERED")
                 || orderStatus.equals("COMPLETED")
                 || orderStatus.equals("PENDING")
+                || orderStatus.equals("PREPARED")
         ) {
             order.setOrderStatus(orderStatus);
             System.out.println("Updating Order Status to: " + orderStatus);
@@ -125,5 +126,14 @@ public class OrderServiceImpl implements OrderService {
             throw new Exception("Order not found");
         }
         return optionalOrder.get();
+    }
+    public Address getOrSaveAddress(Address shipAddress) {
+        // Check if the address exists in the repository
+        return addressRepository.findByStreetAddressAndDistrictAndStateAndCity(
+                shipAddress.getStreetAddress(),
+                shipAddress.getDistrict(),
+                shipAddress.getState(),
+                shipAddress.getCity()
+        ).orElseGet(() -> addressRepository.save(shipAddress));
     }
 }

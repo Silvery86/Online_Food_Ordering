@@ -28,7 +28,7 @@ public class AdminOrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @PutMapping("/order/{id}/{orderStatus}")
+    @PutMapping("/orders/{id}/{orderStatus}")
     public ResponseEntity<Order> updateOrderStauts(@PathVariable Long id,
                                                        @PathVariable String orderStatus,
                                                        @RequestHeader("Authorization") String jwt) throws Exception{

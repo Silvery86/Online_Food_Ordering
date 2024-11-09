@@ -38,7 +38,8 @@ public class Order {
     @OneToMany
     private List<OrderItem> items;
 
-    // private Payment payment;
+    private String shippingName;
+    private String shippingPhone;
 
     private int totalItem;
 

@@ -13,8 +13,8 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String streetAddress;
+    private String district;
     private String state;
     private String city;
-    private String country;
 
 }
