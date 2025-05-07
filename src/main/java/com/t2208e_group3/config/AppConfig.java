@@ -40,7 +40,7 @@ public class AppConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://online-food-ordering.nguyen-giang-86.cloud"));
+        cfg.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://online-food-ordering.silvery-86.cloud"));
         cfg.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         cfg.setAllowCredentials(true);
         cfg.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "*"));
